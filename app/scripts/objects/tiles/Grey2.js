@@ -14,8 +14,8 @@ Grey2.prototype.draw = function(props) {
 
     this.state = assign(this.state, props || {});
 
-    square.setAttributeNS(null, "x", state.cx || 40);
-    square.setAttributeNS(null, "y", state.cy ||40);
+    square.setAttributeNS(null, "x", state.x || 40);
+    square.setAttributeNS(null, "y", state.y ||40);
     square.setAttributeNS(null, "width",  state.w || 10);
     square.setAttributeNS(null, "height",  state.w || 10);
     square.setAttributeNS(null, "opacity", state.opacity || 1);

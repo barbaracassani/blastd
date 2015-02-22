@@ -16,18 +16,19 @@ Tile.prototype.init = function() {
         if (typeof proto[thing] === 'function') {
             proto[thing] = proto[thing].bind(this);
         }
-    }.bind(this))
+    }.bind(this));
+
 };
+
 
 Tile.prototype.draw = function(props) {
     var svgNode = document.querySelector(this.field),
         state = this.state,
         circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-
     this.state = assign(this.state, props || {});
 
-    circle.setAttributeNS(null, "cx", state.cx || 10);
-    circle.setAttributeNS(null, "cy", state.cy ||10);
+    circle.setAttributeNS(null, "cx", state.x || 10);
+    circle.setAttributeNS(null, "cy", state.y ||10);
     circle.setAttributeNS(null, "r",  state.r || 10);
     circle.setAttributeNS(null, "opacity", state.opacity || 1);
     circle.setAttributeNS(null, "fill", state.color || 'black');
