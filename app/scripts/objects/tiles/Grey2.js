@@ -8,6 +8,9 @@ var Grey2 = function(){};
 Grey2.prototype = new BaseTile(state);
 
 Grey2.prototype.draw = function(props) {
+
+    this.id = uuid.v4();
+
     var svgNode = document.querySelector(this.field),
         state = this.state,
         square = document.createElementNS("http://www.w3.org/2000/svg", "rect");
@@ -20,6 +23,8 @@ Grey2.prototype.draw = function(props) {
     square.setAttributeNS(null, "height",  state.w || 10);
     square.setAttributeNS(null, "opacity", state.opacity || 1);
     square.setAttributeNS(null, "fill", state.color || 'black');
+    square.setAttributeNS(null, "class", "tile");
+
     square.setAttribute('id', this.id);
 
     svgNode.appendChild(square);
