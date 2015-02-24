@@ -69,13 +69,45 @@ var methods = {
     right : right,
     down : down
 };
+
+function createStack(bj) {
+
+    var isFull = false, tmpStack = [], stack = [], adjacent;
+
+    Object.keys(methods).forEach(function(key) {
+        do {
+            adjacent = methods[key](bj);
+            if (adjacent.instance.id) {
+                isFull = true;
+            } else {
+                bj = adjacent;
+                tmpStack.push(adjacent)
+            }
+        } while(!isFull);
+
+        stack.push(tmpStack.slice(0));
+        tmpStack = [], isFull = false;
+    });
+
+    return stack;
+}
+
+function stacksIntersect(flattened1, flattened2) {
+    return flattened1.some(function(s1) {
+        return flattened2.some(function(s2) {
+            return s2.column === s1.column && s2.row === s1.row;
+        })
+    });
+}
+
 module.exports = function(tileA, tileB, tileMatrix) {
 
     tiles = tileMatrix;
 
-    var stack1 = [], stack2 = [];
+    var stack1 = [], stack2 = [], stack3 = [];
 
     if (tileA.instance.name !== tileB.instance.name) {
+        // the tiles do not match
         return false;
     }
     // adjacent
@@ -87,52 +119,32 @@ module.exports = function(tileA, tileB, tileMatrix) {
         return true;
     }
 
-    Object.keys(methods).forEach(function(key) {
+    stack1 = createStack(tileA);
+    stack2 = createStack(tileB);
 
-        var bj = tileA, bz = tileB, tmpStack = [];
-        var isFull = false, adjacent;
+    var flattened1 = _.flatten(stack1);
+    var flattened2 = _.flatten(stack2);
 
-        do {
-            adjacent = methods[key](bj);
-            if (adjacent.instance.id) {
-                isFull = true;
-            } else {
-                bj = adjacent;
-                tmpStack.push(adjacent)
-            }
-        } while(!isFull);
-
-        stack1.push(tmpStack.slice(0));
-        tmpStack = []; isFull = false; adjacent = null;
-
-        do {
-            adjacent = methods[key](bz);
-            if (adjacent.instance.id) {
-                isFull = true;
-            } else {
-                bz = adjacent;
-                tmpStack.push(adjacent)
-            }
-        } while(!isFull);
-
-        stack2.push(tmpStack.slice(0));
-        tmpStack = [];
-
-    });
+    if (!flattened1.length || !flattened2.length) {
+        // one of the tiles is completely walled in
+        return false;
+    }
 
     // if the two stacks intersect, then we have a 0 or 1 corner match
 
-    var intersect = _.flatten(stack1).some(function(s1) {
-        return _.flatten(stack2).some(function(s2) {
-            return s2.column === s1.column && s2.row === s1.row;
-        })
-    });
-
     console.info('stacks', stack1, stack2);
 
-    if (intersect) {
+    if (stacksIntersect(flattened1, flattened2)) {
         return true;
     }
 
-    return false;
+    // but now we need to check for 2 corners
+
+    // iterate through all the points of stack1, create a new stack for each and check if it intersects with stack 2
+
+    return flattened1.some(function(point) {
+        stack3 = _.flatten(createStack(point));
+        return stacksIntersect(_.flatten(stack3), stack2);
+    });
+
 };
