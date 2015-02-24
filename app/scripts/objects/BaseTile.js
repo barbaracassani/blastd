@@ -11,12 +11,24 @@ function Tile(state) {
 }
 
 Tile.prototype.init = function() {
-    var proto = this.__proto__; // sorry for __proto__ but it comes handy
+/*    var proto = this.__proto__; // sorry for __proto__ but it comes handy
     Object.getOwnPropertyNames(proto).forEach(function(thing) {
         if (typeof proto[thing] === 'function') {
             proto[thing] = proto[thing].bind(this);
         }
-    }.bind(this));
+    }.bind(this));*/
+};
+
+Tile.prototype.highlight = function() {
+    this.shape.addClass('highlight');
+};
+
+Tile.prototype.dehighlight = function() {
+    this.shape.removeClass('highlight');
+};
+
+Tile.prototype.remove = function() {
+    document.querySelector(this.field).removeChild(this.shape)
 };
 
 Tile.prototype.draw = function(props) {
@@ -35,6 +47,8 @@ Tile.prototype.draw = function(props) {
     circle.setAttributeNS(null, "fill", state.color || 'black');
     circle.setAttributeNS(null, "class", "tile");
     circle.setAttribute('id', this.id);
+
+    this.shape = circle;
 
     svgNode.appendChild(circle);
 };

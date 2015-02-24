@@ -7,9 +7,22 @@ var Grey2 = function(){};
 
 Grey2.prototype = new BaseTile(state);
 
+Grey2.prototype.highlight = function() {
+    this.shape.classList.add('highlight');
+};
+
+Grey2.prototype.dehighlight = function() {
+    this.shape.classList.remove('highlight');
+};
+
+Grey2.prototype.remove = function() {
+  BaseTile.prototype.remove.apply(this, arguments);
+};
+
 Grey2.prototype.draw = function(props) {
 
     this.id = uuid.v4();
+    this.name = 'grey2';
 
     var svgNode = document.querySelector(this.field),
         state = this.state,
@@ -26,6 +39,8 @@ Grey2.prototype.draw = function(props) {
     square.setAttributeNS(null, "class", "tile");
 
     square.setAttribute('id', this.id);
+
+    this.shape = square;
 
     svgNode.appendChild(square);
 };

@@ -1,3 +1,5 @@
+var extend = require('util')._extend;
+var pathfinder = require('../pathfinder');
 
 var BaseLevel = {
 
@@ -20,29 +22,30 @@ var BaseLevel = {
     draw : function() {
         var xRow = this.grid[0],
             yRow = this.grid[1], initX = xRow, tmpObj,
+            xI = 0, yI = 0,
             tmpArray = [];
-        while (yRow > 0) {
-           while (xRow > 0) {
+        while (xI < xRow) {
+           while (yI < yRow) {
                tmpObj = this.tileRandomizer();
                tmpObj.draw({
-                   x : xRow * (this.tileSide + this.distance),
-                   y : yRow * (this.tileSide + this.distance),
+                   x : xI * (this.tileSide + this.distance),
+                   y : yI * (this.tileSide + this.distance),
                    w : this.tileSide
                });
                tmpArray.push(tmpObj);
-               xRow--;
+               yI++;
            }
             this.tiles.push(tmpArray.slice(0));
             tmpArray = [];
-            yRow--;
-            xRow = initX;
+            xI++;
+            yI = 0;
         }
     },
     findTile : function(id) {
         var tiles = this.tiles, tile, row, column;
         tiles.some(function(rows, i1) {
             tile = rows.some(function(t, i2) {
-                if (t.id === id) {
+                if (t && t.id === id) {
                     row = i2;
                     return true;
                 }
@@ -54,16 +57,42 @@ var BaseLevel = {
         });
         return {
             column : column,
-            row : row
+            row : row,
+            instance : tiles[column][row]
         }
     },
+    checkPath : function() {
+        var t1 = this.selectedTiles[0];
+        var t2 = this.selectedTiles[1];
+        return pathfinder(t1, t2, this.tiles);
+    },
+    score : function() {
+        this.selectedTiles.forEach(function(tile) {
+            tile.instance.remove();
+        });
+        this.selectedTiles.forEach(function(tile) {
+            this.tiles[tile.column][tile.row].id = null;
+            this.tiles[tile.column][tile.row].shape = null;
+        }.bind(this));
+        this.selectedTiles = [];
+    },
     clickHandler : function(id) {
-        var tile;
-        if (this.selectedTiles.length) {
-            // check path
+        var tile = this.findTile(id);
+        if (this.selectedTiles.length === 1) {
+            tile.instance.highlight();
+            this.selectedTiles.push(tile);
+            if (this.checkPath()) {
+                this.score();
+            } else {
+                this.selectedTiles.forEach(function(tile) {
+                    tile.instance.dehighlight();
+                });
+                this.selectedTiles = [];
+            }
         } else {
             // find and highlight tile
-            tile = this.findTile(id);
+            this.selectedTiles.push(tile);
+            tile.instance.highlight();
             console.info('tile is ', tile);
         }
     },
