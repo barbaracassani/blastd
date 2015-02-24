@@ -13,55 +13,40 @@ var emptyTile = {
     }
 };
 
-var left = function(obj) {
+function nextTile(obj, variator) {
     var bj = extend({}, obj);
-
-    bj.column--;
-    if (tiles[bj.column] && tiles[bj.column][bj.row]) {
-        return {
-            column : bj.column,
-            row : bj.row,
-            instance : tiles[bj.column][bj.row]
-        }
+    switch (variator) {
+        case 'left':
+            bj.column--;
+            break;
+        case 'right' :
+            bj.column++;
+            break;
+        case 'up' :
+            bj.row--;
+            break;
+        case 'down' :
+            bj.row++;
+            break;
     }
-    return borderTile;
+    return {
+        column : bj.column,
+        row : bj.row,
+        instance : (tiles[bj.column] && tiles[bj.column][bj.row]) ? tiles[bj.column][bj.row] : { id : undefined }
+    }
+}
+
+var left = function(obj) {
+    return nextTile(obj, 'left');
 };
 var right = function(obj) {
-    var bj = extend({}, obj);
-    bj.column++;
-    if (tiles[bj.column] && tiles[bj.column][bj.row]) {
-        return {
-            column : bj.column,
-            row : bj.row,
-            instance : tiles[bj.column][bj.row]
-        }
-    }
-    return borderTile;
+    return nextTile(obj, 'right');
 };
 var up = function(obj) {
-    var bj = extend({}, obj);
-    bj.row--;
-    if (tiles[bj.column] && tiles[bj.column][bj.row]) {
-        return {
-            column : bj.column,
-            row : bj.row,
-            instance : tiles[bj.column][bj.row]
-        }
-    }
-    return borderTile;
+    return nextTile(obj, 'up');
 };
 var down = function(obj) {
-    var bj = extend({}, obj);
-    bj.row++;
-    if (tiles[bj.column] && tiles[bj.column][bj.row]) {
-        return {
-            column : bj.column,
-            row : bj.row,
-            instance : tiles[bj.column][bj.row]
-        }
-    }
-    return borderTile;
-
+    return nextTile(obj, 'down');
 };
 var methods = {
     left : left,
@@ -70,20 +55,35 @@ var methods = {
     down : down
 };
 
-function createStack(bj) {
+function createStack(tile) {
 
     var isFull = false, tmpStack = [], stack = [], adjacent;
 
     Object.keys(methods).forEach(function(key) {
+
+        var bj = extend({}, tile);
+
         do {
             adjacent = methods[key](bj);
-            if (adjacent.instance.id) {
+            if ((adjacent.row <= -2) ||
+                (adjacent.column <= -2) ||
+                (adjacent.row >= tiles[0].length+2) ||
+                (adjacent.column >= tiles.length + 2)) {
+                // out of range!
+                break;
+            } else if (adjacent.instance.id) {
                 isFull = true;
             } else {
                 bj = adjacent;
                 tmpStack.push(adjacent);
                 if (adjacent.instance.id === undefined) {
-                    break;
+                    if ((key === 'up' && bj.row === -1) ||
+                        (key === 'down' && bj.row === tiles[0].length+1) ||
+                        (key === 'right' && bj.column === tiles.length + 1) ||
+                        (key === 'left') && bj.column === -1) {
+                        break;
+                    }
+
                 }
             }
         } while(!isFull);
@@ -99,7 +99,11 @@ function createStack(bj) {
 function stacksIntersect(flattened1, flattened2) {
     return flattened1.some(function(s1) {
         return flattened2.some(function(s2) {
-            return s2.column === s1.column && s2.row === s1.row;
+            if (s2.column === s1.column && s2.row === s1.row) {
+                console.info('intersection at col ', s1.column, ' row ',  s1.row);
+                return true;
+            }
+
         })
     });
 }
@@ -148,7 +152,9 @@ module.exports = function(tileA, tileB, tileMatrix) {
 
     return flattened1.some(function(point) {
         stack3 = _.flatten(createStack(point));
-        return stacksIntersect(_.flatten(stack3), stack2);
+        console.warn('comparing ', stack3);
+        console.info('comparing ',  stack2);
+        return stacksIntersect(_.flatten(stack3), flattened2);
     });
 
 };

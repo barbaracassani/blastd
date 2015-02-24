@@ -28,8 +28,8 @@ var BaseLevel = {
            while (yI < yRow) {
                tmpObj = this.tileRandomizer();
                tmpObj.draw({
-                   x : xI * (this.tileSide + this.distance),
-                   y : yI * (this.tileSide + this.distance),
+                   x : (xI+1) * (this.tileSide + this.distance),
+                   y : (yI+1) * (this.tileSide + this.distance),
                    w : this.tileSide
                });
                tmpArray.push(tmpObj);
