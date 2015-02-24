@@ -1,3 +1,5 @@
+var _ = require('lodash-node');
+
 var tiles;
 var extend = require('util')._extend;
 var borderTile = {
@@ -119,7 +121,15 @@ module.exports = function(tileA, tileB, tileMatrix) {
 
     });
 
+    // if the two stacks intersect, then we have a 0 or 1 corner match
 
+    var intersect = _.flatten(stack1).filter(function(n) {
+        return _.flatten(stack2).indexOf(n) != -1;
+    });
+
+    if (intersect) {
+        return true;
+    }
 
     console.info('stacks', stack1, stack2);
     return false;
