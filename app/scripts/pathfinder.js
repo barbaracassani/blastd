@@ -11,8 +11,7 @@ var emptyTile = {
     instance : {
         id : null
     }
-}
-
+};
 
 var left = function(obj) {
     var bj = extend({}, obj);
@@ -123,14 +122,17 @@ module.exports = function(tileA, tileB, tileMatrix) {
 
     // if the two stacks intersect, then we have a 0 or 1 corner match
 
-    var intersect = _.flatten(stack1).filter(function(n) {
-        return _.flatten(stack2).indexOf(n) != -1;
+    var intersect = _.flatten(stack1).some(function(s1) {
+        return _.flatten(stack2).some(function(s2) {
+            return s2.column === s1.column && s2.row === s1.row;
+        })
     });
+
+    console.info('stacks', stack1, stack2);
 
     if (intersect) {
         return true;
     }
 
-    console.info('stacks', stack1, stack2);
     return false;
 };
