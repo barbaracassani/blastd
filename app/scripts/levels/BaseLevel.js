@@ -79,6 +79,13 @@ var BaseLevel = {
     clickHandler : function(id) {
         var tile = this.findTile(id);
         if (this.selectedTiles.length === 1) {
+
+            if (tile.instance.id === this.selectedTiles[0].instance.id) {
+                this.selectedTiles[0].instance.dehighlight();
+                this.selectedTiles = [];
+                return false;
+            }
+
             tile.instance.highlight();
             this.selectedTiles.push(tile);
             if (this.checkPath()) {

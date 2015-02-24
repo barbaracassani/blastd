@@ -81,12 +81,16 @@ function createStack(bj) {
                 isFull = true;
             } else {
                 bj = adjacent;
-                tmpStack.push(adjacent)
+                tmpStack.push(adjacent);
+                if (adjacent.instance.id === undefined) {
+                    break;
+                }
             }
         } while(!isFull);
 
         stack.push(tmpStack.slice(0));
-        tmpStack = [], isFull = false;
+        tmpStack = [];
+        isFull = false;
     });
 
     return stack;
