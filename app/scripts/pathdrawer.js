@@ -49,7 +49,7 @@ module.exports = function(options) {
         //pathEl.setAttribute('d','M10 10 H 90 V 90 H 10 L 10 10' );
         pathEl.setAttribute('d', points);
         pathEl.style.stroke = 'white';
-        pathEl.style.strokeWidth = '5';
+        pathEl.style.strokeWidth = '2';
         pathEl.style.fill = 'none';
 
         document.querySelector('svg').appendChild(pathEl);
