@@ -1,7 +1,7 @@
 var extend = require('util')._extend;
 var _ = require('lodash-node');
 var pathfinder = require('../pathfinder');
-var state = require('../models/state');
+var state = require('../config/state');
 var inherits = require('util').inherits;
 var EventEmitter = require('events').EventEmitter;
 
@@ -44,16 +44,16 @@ var BaseLevel = {
             xI = 0, yI = 0,
             tmpArray = [];
         while (xI < xRow) {
-           while (yI < yRow) {
-               tmpObj = pool.shift();
-               tmpObj.draw({
-                   x : (xI+1) * (this.tileSide + this.distance),
-                   y : (yI+1) * (this.tileSide + this.distance),
-                   w : this.tileSide
-               });
-               tmpArray.push(tmpObj);
-               yI++;
-           }
+            while (yI < yRow) {
+                tmpObj = pool.shift();
+                tmpObj.draw({
+                    x : (xI+1) * (this.tileSide + this.distance),
+                    y : (yI+1) * (this.tileSide + this.distance),
+                    w : this.tileSide
+                });
+                tmpArray.push(tmpObj);
+                yI++;
+            }
             this.tiles.push(tmpArray.slice(0));
             tmpArray = [];
             xI++;
@@ -122,9 +122,20 @@ var BaseLevel = {
             tile.instance.highlight();
         }
     },
+    timer : function() {
+        var time = this.time;
+        var timeout = window.setInterval(function() {
+            time -= 1000;
+            this.emit(state.events.ON_TIME, time / 1000);
+            if (time <= 0) {
+                window.clearInterval(timeout);
+            }
+        }.bind(this), 1000)
+    },
     start : function(view) {
         view.on('clicked', this.clickHandler.bind(this));
         this.emit(state.events.ON_TILE, this.grid[0] * this.grid[1]);
+        this.timer();
 
     },
     end : function(view) {

@@ -1,4 +1,5 @@
 var _ = require('lodash-node');
+var state = require('../config/state');
 
 module.exports =  {
 
@@ -15,7 +16,7 @@ playIntro : function(options, callback) {
         field.removeChild(el);
         el = null;
         callback();
-    }, 3000)
+    }, state.state.introLength);
 }
 
 

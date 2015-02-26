@@ -1,6 +1,6 @@
 "use strict";
 
-var state = require('../models/state');
+var state = require('../config/state');
 var Tile = require('../objects/tiles/Grey2');
 var inherits = require('util').inherits;
 var EventEmitter = require('events').EventEmitter;
@@ -26,6 +26,10 @@ MainView.prototype.addListeners = function() {
 
 MainView.prototype.updateTiles = function(num) {
     document.querySelector(state.domMap.pairs).innerHTML = 'Tiles ' + num;
+};
+
+MainView.prototype.updateTime = function(time) {
+    document.querySelector(state.domMap.time).innerHTML = 'Time ' + time;
 };
 
 MainView.prototype.drawField = function() {

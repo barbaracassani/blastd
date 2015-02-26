@@ -1,13 +1,12 @@
 "use strict";
 
-var state = require('./models/state');
+var state = require('./config/state');
 var View = require('./views/mainView');
 var intermission = require('./levels/intermission');
 var levels = [require('./levels/l1'), require('./levels/l2')];
 
 var Game = function() {
 
-    console.info("am alive");
     this.view = new View();
     this.currentLevel = null;
 
@@ -30,12 +29,25 @@ intermission.playIntro({
         }
         this.view.updateTiles(tiles)
     }.bind(this));
+    this.currentLevel.on(state.events.ON_TIME, function(time) {
+        this.view.updateTime(time);
+        if (time <= 0) {
+            this.endGame();
+        }
+    }.bind(this));
     this.currentLevel.draw();
 
     this.currentLevel.start(this.view);
 }.bind(this));
 
 // also, subscribe to the end level event
+};
+
+Game.prototype.endGame = function() {
+    // remove listeners
+    // destroy level
+    // play intro
+    // next level
 };
 
 Game.prototype.init = function() {

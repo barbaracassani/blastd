@@ -1,5 +1,5 @@
 var BaseTile = require('../BaseTile');
-var state = require('../../models/state');
+var state = require('../../config/state');
 var assign = require('object-assign');
 var uuid = require('node-uuid');
 

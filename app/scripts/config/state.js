@@ -7,7 +7,8 @@ module.exports = new function() {
     };
     this.state = {
         currentLevel : 0,
-        tilesRemaining : 0
+        tilesRemaining : 0,
+        introLength : 2000
     };
     this.events = {
 
