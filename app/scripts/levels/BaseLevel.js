@@ -1,5 +1,9 @@
 var extend = require('util')._extend;
+var _ = require('lodash-node');
 var pathfinder = require('../pathfinder');
+var state = require('../models/state');
+var inherits = require('util').inherits;
+var EventEmitter = require('events').EventEmitter;
 
 var BaseLevel = {
 
@@ -10,23 +14,38 @@ var BaseLevel = {
     tileSide : 30,
     grid : [10, 10],
     tileVariety : [ ],
+    tilePool : [],
     tiles : [],
     selectedTiles : [],
     time : 60000,
     getRandomInt : function(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     },
+    tileIniter : function() {
+        // ensure the tiles are in pairs
+        var tilenum = this.grid[0] * this.grid[1], klass;
+        while (tilenum > 0) {
+            klass = this.tileVariety[this.getRandomInt(0, this.tileVariety.length - 1)];
+            this.tilePool.push(new klass());
+            this.tilePool.push(new klass());
+            tilenum--;
+        }
+        return  _.shuffle(this.tilePool);
+    },
     tileRandomizer : function() {
         return new (this.tileVariety[this.getRandomInt(0, this.tileVariety.length - 1)]);
     },
     draw : function() {
+
+        var pool = this.tileIniter();
+
         var xRow = this.grid[0],
             yRow = this.grid[1], initX = xRow, tmpObj,
             xI = 0, yI = 0,
             tmpArray = [];
         while (xI < xRow) {
            while (yI < yRow) {
-               tmpObj = this.tileRandomizer();
+               tmpObj = pool.shift();
                tmpObj.draw({
                    x : (xI+1) * (this.tileSide + this.distance),
                    y : (yI+1) * (this.tileSide + this.distance),
@@ -75,6 +94,7 @@ var BaseLevel = {
             this.tiles[tile.column][tile.row].shape = null;
         }.bind(this));
         this.selectedTiles = [];
+        this.emit(state.events.ON_TILE);
     },
     clickHandler : function(id) {
         var tile = this.findTile(id);
@@ -100,15 +120,18 @@ var BaseLevel = {
             // find and highlight tile
             this.selectedTiles.push(tile);
             tile.instance.highlight();
-            console.info('tile is ', tile);
         }
     },
     start : function(view) {
-        view.on('clicked', this.clickHandler.bind(this))
+        view.on('clicked', this.clickHandler.bind(this));
+        this.emit(state.events.ON_TILE, this.grid[0] * this.grid[1]);
+
     },
     end : function(view) {
         view.removeListener('clicked', this.clickHandler.bind(this));
     }
 };
+
+extend(BaseLevel, EventEmitter.prototype);
 
 module.exports = BaseLevel;

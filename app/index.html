@@ -22,8 +22,13 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
+<div id="wrapper">
 
         <svg id="game">
+            <text x="12" y="12" fill="white" id="pairs">Pairs</text>
+            <text x="120" y="12" fill="white" id="time">Time</text>
+            <text x="240" y="12" fill="white" id="level">Level</text>
+            <text x="360" y="12" fill="white" id="score">Score</text>
             <defs>
                 <pattern id="mm_grid" width="20" height="20" patternUnits="userSpaceOnUse">
                     <rect stroke="black" stroke-width="0.5" fill="transparent" stroke-opacity="0.2" width="20" height="20" />
@@ -32,7 +37,7 @@
             <rect id="gridded" fill="url(#mm_grid)" x="0" y="0" width="100%" height="100%"/>
         </svg>
 
-
+</div>
         <!-- build:js scripts/vendor.js -->
         <!-- bower:js -->
         <script src="bower_components/jquery/dist/jquery.js"></script>

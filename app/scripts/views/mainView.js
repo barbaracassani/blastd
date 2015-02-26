@@ -24,6 +24,10 @@ MainView.prototype.addListeners = function() {
     }.bind(this));
 };
 
+MainView.prototype.updateTiles = function(num) {
+    document.querySelector(state.domMap.pairs).innerHTML = 'Tiles ' + num;
+};
+
 MainView.prototype.drawField = function() {
     var tile = new Tile(document.querySelector(state.domMap.field));
     tile.draw();

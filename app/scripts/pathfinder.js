@@ -2,16 +2,6 @@ var _ = require('lodash-node');
 
 var tiles;
 var extend = require('util')._extend;
-var borderTile = {
-    instance : {
-        id : undefined
-    }
-};
-var emptyTile = {
-    instance : {
-        id : null
-    }
-};
 
 function nextTile(obj, variator) {
     var bj = extend({}, obj);
@@ -152,8 +142,6 @@ module.exports = function(tileA, tileB, tileMatrix) {
 
     return flattened1.some(function(point) {
         stack3 = _.flatten(createStack(point));
-        console.warn('comparing ', stack3);
-        console.info('comparing ',  stack2);
         return stacksIntersect(_.flatten(stack3), flattened2);
     });
 
