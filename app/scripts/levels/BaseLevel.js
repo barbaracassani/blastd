@@ -1,12 +1,14 @@
+"use strict";
+
 var extend = require('util')._extend;
 var _ = require('lodash-node');
 var pathfinder = require('../pathfinder');
 var state = require('../config/state');
 var inherits = require('util').inherits;
 var EventEmitter = require('events').EventEmitter;
+var pathdrawer = require('../pathdrawer');
 
 var BaseLevel = {
-
     falling : false,
     rearranging : false,
     offset : 10,
@@ -18,6 +20,7 @@ var BaseLevel = {
     tiles : [],
     selectedTiles : [],
     time : 60000,
+    pathdrawer : null,
     getRandomInt : function(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     },
@@ -36,6 +39,7 @@ var BaseLevel = {
         return new (this.tileVariety[this.getRandomInt(0, this.tileVariety.length - 1)]);
     },
     draw : function() {
+
 
         var pool = this.tileIniter();
 
@@ -59,6 +63,13 @@ var BaseLevel = {
             xI++;
             yI = 0;
         }
+
+        this.pathdrawer = pathdrawer({
+            offset : this.offset,
+            tileSide : this.tileSide,
+            grid : this.grid,
+            distance : this.distance
+        })
     },
     findTile : function(id) {
         var tiles = this.tiles, tile, row, column;
@@ -97,6 +108,7 @@ var BaseLevel = {
         this.emit(state.events.ON_TILE);
     },
     clickHandler : function(id) {
+        var path;
         var tile = this.findTile(id);
         if (this.selectedTiles.length === 1) {
 
@@ -108,8 +120,13 @@ var BaseLevel = {
 
             tile.instance.highlight();
             this.selectedTiles.push(tile);
-            if (this.checkPath()) {
-                this.score();
+            path = this.checkPath();
+            if (path) {
+                if (_.isArray(path)) {
+                    this.pathdrawer(this.selectedTiles, path, this.score.bind(this));
+                } else {
+                    this.score();
+                }
             } else {
                 this.selectedTiles.forEach(function(tile) {
                     tile.instance.dehighlight();

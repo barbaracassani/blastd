@@ -87,22 +87,28 @@ function createStack(tile) {
 }
 
 function stacksIntersect(flattened1, flattened2) {
-    return flattened1.some(function(s1) {
-        return flattened2.some(function(s2) {
+    var found;
+    flattened1.some(function(s1) {
+        flattened2.some(function(s2) {
             if (s2.column === s1.column && s2.row === s1.row) {
                 console.info('intersection at col ', s1.column, ' row ',  s1.row);
-                return true;
+                found = [{
+                    row : s1.row,
+                    column : s2.column
+                }];
+                return found;
             }
-
-        })
+        });
+        return found;
     });
+    return found;
 }
 
 module.exports = function(tileA, tileB, tileMatrix) {
 
     tiles = tileMatrix;
 
-    var stack1 = [], stack2 = [], stack3 = [];
+    var stack1 = [], stack2 = [], stack3 = [], intersect;
 
     if (tileA.instance.name !== tileB.instance.name) {
         // the tiles do not match
@@ -128,21 +134,25 @@ module.exports = function(tileA, tileB, tileMatrix) {
         return false;
     }
 
-    // if the two stacks intersect, then we have a 0 or 1 corner match
+    intersect = stacksIntersect(flattened1, flattened2);
 
-    console.info('stacks', stack1, stack2);
-
-    if (stacksIntersect(flattened1, flattened2)) {
-        return true;
+    if (intersect) {
+        return intersect;
     }
 
     // but now we need to check for 2 corners
 
     // iterate through all the points of stack1, create a new stack for each and check if it intersects with stack 2
 
-    return flattened1.some(function(point) {
+    flattened1.some(function(point) {
         stack3 = _.flatten(createStack(point));
-        return stacksIntersect(_.flatten(stack3), flattened2);
+        intersect = stacksIntersect(_.flatten(stack3), flattened2);
+        if (intersect) {
+            intersect.push(point);
+            return intersect;
+        }
     });
+
+    return intersect;
 
 };
