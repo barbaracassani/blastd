@@ -1,5 +1,6 @@
 var state = require('./config/state');
 var _ = require('lodash-node');
+var rounder = require('./rounder');
 
 function getPosition(tile, offset, side, distance) {
     return {
@@ -43,13 +44,14 @@ module.exports = function(options) {
         }
         points.push(getPosition(selectedTiles[1], options.offset, options.tileSide, options.distance));
 
-        points = serialise(points);
+        points = rounder(serialise(points), 4);
 
         var pathEl = document.createElementNS("http://www.w3.org/2000/svg", "path");
         //pathEl.setAttribute('d','M10 10 H 90 V 90 H 10 L 10 10' );
         pathEl.setAttribute('d', points);
         pathEl.style.stroke = 'white';
-        pathEl.style.strokeWidth = '2';
+        pathEl.style.strokeLineJoin = 'round';
+        pathEl.style.strokeWidth = '3';
         pathEl.style.fill = 'none';
 
         document.querySelector('svg').appendChild(pathEl);

@@ -21,4 +21,7 @@
 .highlight {
   stroke: white; }
 
+path {
+  stroke-linejoin: 3; }
+
 /*# sourceMappingURL=main.css.map */

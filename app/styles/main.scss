@@ -26,3 +26,7 @@ $icon-font-path: "/bower_components/bootstrap-sass-official/assets/fonts/";
 .highlight {
   stroke :  white;
 }
+
+path {
+  stroke-linejoin: round(3)
+}
