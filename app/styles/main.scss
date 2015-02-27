@@ -28,5 +28,6 @@ $icon-font-path: "/bower_components/bootstrap-sass-official/assets/fonts/";
 }
 
 path {
-  stroke-linejoin: round(3)
+  stroke-linejoin: round(3);
+  transform: translate(6px,6px);
 }

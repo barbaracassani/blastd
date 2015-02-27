@@ -22,6 +22,7 @@
   stroke: white; }
 
 path {
-  stroke-linejoin: 3; }
+  stroke-linejoin: 3;
+  transform: translate(6px, 6px); }
 
 /*# sourceMappingURL=main.css.map */
