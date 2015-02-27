@@ -144,11 +144,12 @@ var BaseLevel = {
             this.selectedTiles.push(tile);
             path = this.checkPath();
             if (path) {
-                if (_.isArray(path)) {
+                /*if (_.isArray(path)) {
                     this.pathdrawer(this.selectedTiles, path, this.score.bind(this));
                 } else {
                     this.score();
-                }
+                }*/
+                this.pathdrawer(this.selectedTiles, _.isArray(path) ? path : [], this.score.bind(this));
             } else {
                 this.selectedTiles.forEach(function(tile) {
                     tile.instance.dehighlight();

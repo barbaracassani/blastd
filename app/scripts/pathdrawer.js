@@ -72,7 +72,7 @@ module.exports = function(options) {
         points.push(getPosition(selectedTiles[0], options.offset, options.tileSide, options.distance));
         if (path.length === 1) {
             points.push(getPosition(path[0], options.offset, options.tileSide, options.distance));
-        } else {
+        } else if (path.length === 2) {
             nextPoint = findNext(path, selectedTiles[0]);
             points.push(getPosition(nextPoint, options.offset, options.tileSide, options.distance ));
             otherPoint = _.reject(path, function(p) {
