@@ -31,11 +31,28 @@ Tile.prototype.remove = function() {
     document.querySelector(this.field).removeChild(this.shape)
 };
 
-Tile.prototype.move = function(prop, value) {
-    if (this.shape) {
-        this.shape.setAttributeNS(null, prop, value);
+Tile.prototype.move = function(prop, value, drop) {
+    if (drop) {
+        this.animate(value);
+    } else {
+        if (this.shape) {
+            this.shape.setAttributeNS(null, prop, value);
+        }
     }
     this.state[prop] = value;
+};
+
+Tile.prototype.animate = function(value) {
+    var shape;
+    if (this.shape) {
+        shape = this.shape;
+        shape.style.transform = shape.style.WebkitTransform = 'none';
+        shape.getBoundingClientRect();
+        shape.style.transform = shape.style.WebkitTransform = 'translateY(' + (value - shape.getAttribute('y')*1) + 'px)';
+        shape.style.transitionDuration = shape.style.WebkitTransitionDuration = "0.2";
+
+    }
+
 };
 
 Tile.prototype.draw = function(props) {

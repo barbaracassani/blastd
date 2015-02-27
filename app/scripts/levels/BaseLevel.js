@@ -124,7 +124,7 @@ var BaseLevel = {
            var interestedColumn = tilz.column;
             this.tiles[interestedColumn] = rearrangeColumn.call(this, this.tiles[interestedColumn]);
             this.tiles[interestedColumn].forEach(function(tt, index) {
-                tt.move('y', (index+1) * (this.tileSide + this.distance));
+                tt.move.call(tt, 'y', (index+1) * (this.tileSide + this.distance), true);
             }.bind(this))
         }.bind(this));
 
