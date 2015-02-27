@@ -3,9 +3,12 @@ var state = require('../../config/state');
 var uuid = require('node-uuid');
 var assign = require('object-assign');
 
-var Grey3 = function(){};
+var Grey3 = function(){
+    this.state = {};
+};
 
 Grey3.prototype = new BaseTile(state);
+Grey3.prototype.constructor = Grey3;
 
 Grey3.prototype.highlight = function() {
     this.shape.classList.add('highlight');
@@ -29,6 +32,8 @@ Grey3.prototype.draw = function(props) {
         square = document.createElementNS("http://www.w3.org/2000/svg", "rect");
 
     this.state = assign(this.state, props || {});
+
+    console.info('my state is ', this.state.x, this.state.y)
 
     square.setAttributeNS(null, "x", state.x || 40);
     square.setAttributeNS(null, "y", state.y ||40);

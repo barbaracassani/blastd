@@ -10,6 +10,7 @@ var pathdrawer = require('../pathdrawer');
 
 var BaseLevel = {
     falling : true,
+    swapping : 2000,
     rearranging : false,
     offset : 10,
     distance : 10,
@@ -129,6 +130,44 @@ var BaseLevel = {
         }.bind(this));
 
     },
+    startSwapper : function() {
+        this.swapTime = window.setInterval(function() {
+            this.swapper();
+        }.bind(this), this.swapping);
+    },
+    stopSwapper : function() {
+        window.clearInterval(this.swapTime);
+    },
+    swapper : function() {
+
+        var tile1, tile2, xy1, xy2;
+
+        var fullTiles = _.filter(_.flatten(this.tiles), function(tile) {
+            return tile.shape;
+        });
+
+        if (fullTiles.length > 2) {
+
+        tile1 = fullTiles[this.getRandomInt(0, fullTiles.length - 1)];
+        tile2 = fullTiles[this.getRandomInt(0, fullTiles.length - 1)];
+
+
+        while (tile1.shape.id === tile2.shape.id) {
+            tile2 = fullTiles[this.getRandomInt(0, fullTiles.length - 1)];
+        }
+
+        xy1 = _.clone(tile1.state);
+        xy2 = _.clone(tile2.state);
+
+        tile1.move('x', xy2.x);
+        tile1.move('y', xy2.y);
+
+        tile2.move('x', xy1.x);
+        tile2.move('y', xy1.y);
+
+        }
+
+    },
     clickHandler : function(id) {
         var path;
         var tile = this.findTile(id);
@@ -144,11 +183,6 @@ var BaseLevel = {
             this.selectedTiles.push(tile);
             path = this.checkPath();
             if (path) {
-                /*if (_.isArray(path)) {
-                    this.pathdrawer(this.selectedTiles, path, this.score.bind(this));
-                } else {
-                    this.score();
-                }*/
                 this.pathdrawer(this.selectedTiles, _.isArray(path) ? path : [], this.score.bind(this));
             } else {
                 this.selectedTiles.forEach(function(tile) {
@@ -176,7 +210,9 @@ var BaseLevel = {
         view.on('clicked', this.clickHandler.bind(this));
         this.emit(state.events.ON_TILE, this.grid[0] * this.grid[1]);
         this.timer();
-
+        if (this.swapping) {
+            this.startSwapper();
+        }
     },
     end : function(view) {
         view.removeListener('clicked', this.clickHandler.bind(this));
