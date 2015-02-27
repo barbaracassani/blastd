@@ -43,6 +43,26 @@ function serialise(points) {
     return str;
 }
 
+function animate(pathZ) {
+    // copied from Jake Archibald (http://jakearchibald.com/2013/animated-line-drawing-svg/)
+    var path = document.querySelector('#' + pathZ);
+    var length = path.getTotalLength();
+// Clear any previous transition
+    path.style.transition = path.style.WebkitTransition =
+        'none';
+// Set up the starting positions
+    path.style.strokeDasharray = length + ' ' + length;
+    path.style.strokeDashoffset = length;
+// Trigger a layout so styles are calculated & the browser
+// picks up the starting position before animating
+    path.getBoundingClientRect();
+// Define our transition
+    path.style.transition = path.style.WebkitTransition =
+        'stroke-dashoffset 0.1s ease-in-out';
+// Go!
+    path.style.strokeDashoffset = '0';
+}
+
 module.exports = function(options) {
     // arm the pathdrawer with the options; offset, tileSide, grid, distance
     return function(selectedTiles, path, callback) {
@@ -72,8 +92,15 @@ module.exports = function(options) {
         pathEl.style.strokeWidth = '3';
         pathEl.style.fill = 'none';
 
-        document.querySelector('svg').appendChild(pathEl);
+        var uuidZ = 'pathZ';
+        pathEl.id = uuidZ;
 
-        callback();
+        document.querySelector('svg').appendChild(pathEl);
+        animate(uuidZ);
+        window.setTimeout(function() {
+            document.querySelector('svg').removeChild(pathEl);
+            callback();
+        },100);
+
     }
  };
