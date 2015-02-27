@@ -31,6 +31,13 @@ Tile.prototype.remove = function() {
     document.querySelector(this.field).removeChild(this.shape)
 };
 
+Tile.prototype.move = function(prop, value) {
+    if (this.shape) {
+        this.shape.setAttributeNS(null, prop, value);
+    }
+    this.state[prop] = value;
+};
+
 Tile.prototype.draw = function(props) {
 
     this.id = uuid.v4();

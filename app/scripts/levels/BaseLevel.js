@@ -9,12 +9,12 @@ var EventEmitter = require('events').EventEmitter;
 var pathdrawer = require('../pathdrawer');
 
 var BaseLevel = {
-    falling : false,
+    falling : true,
     rearranging : false,
     offset : 10,
     distance : 10,
     tileSide : 30,
-    grid : [10, 10],
+    grid : [5, 5],
     tileVariety : [ ],
     tilePool : [],
     tiles : [],
@@ -39,7 +39,6 @@ var BaseLevel = {
         return new (this.tileVariety[this.getRandomInt(0, this.tileVariety.length - 1)]);
     },
     draw : function() {
-
 
         var pool = this.tileIniter();
 
@@ -104,8 +103,31 @@ var BaseLevel = {
             this.tiles[tile.column][tile.row].id = null;
             this.tiles[tile.column][tile.row].shape = null;
         }.bind(this));
+
+        if (this.falling) {
+            this.faller();
+        }
+
         this.selectedTiles = [];
         this.emit(state.events.ON_TILE);
+    },
+    faller : function() {
+
+        function rearrangeColumn(tiles) {
+            console.info('in', tiles);
+            return _.flatten(_.partition(tiles, function(a) {
+                return a.shape === null;
+            }));
+        }
+
+        this.selectedTiles.forEach(function(tilz) {
+           var interestedColumn = tilz.column;
+            this.tiles[interestedColumn] = rearrangeColumn.call(this, this.tiles[interestedColumn]);
+            this.tiles[interestedColumn].forEach(function(tt, index) {
+                tt.move('y', (index+1) * (this.tileSide + this.distance));
+            }.bind(this))
+        }.bind(this));
+
     },
     clickHandler : function(id) {
         var path;

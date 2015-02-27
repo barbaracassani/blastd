@@ -44,7 +44,7 @@ function serialise(points) {
 }
 
 function animate(pathZ) {
-    // copied from Jake Archibald (http://jakearchibald.com/2013/animated-line-drawing-svg/)
+    // this method taken from Jake Archibald (http://jakearchibald.com/2013/animated-line-drawing-svg/)
     var path = document.querySelector('#' + pathZ);
     var length = path.getTotalLength();
 // Clear any previous transition
@@ -103,4 +103,4 @@ module.exports = function(options) {
         },100);
 
     }
- };
+};
