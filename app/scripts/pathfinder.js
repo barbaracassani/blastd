@@ -91,7 +91,6 @@ function stacksIntersect(flattened1, flattened2) {
     flattened1.some(function(s1) {
         flattened2.some(function(s2) {
             if (s2.column === s1.column && s2.row === s1.row) {
-                console.info('intersection at col ', s1.column, ' row ',  s1.row);
                 found = [{
                     row : s1.row,
                     column : s2.column

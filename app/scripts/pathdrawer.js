@@ -15,6 +15,24 @@ function findNext(path, tile) {
     })
 }
 
+function cutStroke(points, tileSide) {
+    ['y', 'x'].forEach(function(p) {
+        if (points[0][p] > points[1][p]) {
+            // goes up
+            points[0][p] -= tileSide/2;
+        } else if (points[0][p] < points[1][p]) {
+            points[0][p] += tileSide/2;
+        }
+        if (points[points.length-1][p] > points[points.length-2][p]) {
+            // goes up
+            points[points.length-1][p] -= tileSide/2;
+        } else if (points[points.length-1][p] < points[points.length-2][p]) {
+            points[points.length-1][p] += tileSide/2;
+        }
+    });
+
+    return points;
+}
 function serialise(points) {
     var str = 'M';
     var first = points.shift();
@@ -44,7 +62,7 @@ module.exports = function(options) {
         }
         points.push(getPosition(selectedTiles[1], options.offset, options.tileSide, options.distance));
 
-        points = rounder(serialise(points), 4);
+        points = rounder(serialise(cutStroke(points, options.tileSide)), 4);
 
         var pathEl = document.createElementNS("http://www.w3.org/2000/svg", "path");
         //pathEl.setAttribute('d','M10 10 H 90 V 90 H 10 L 10 10' );
