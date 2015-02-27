@@ -50,7 +50,6 @@ Tile.prototype.animate = function(value) {
         shape.getBoundingClientRect();
         shape.style.transform = shape.style.WebkitTransform = 'translateY(' + (value - shape.getAttribute('y')*1) + 'px)';
         shape.style.transitionDuration = shape.style.WebkitTransitionDuration = "0.2";
-
     }
 
 };

@@ -31,7 +31,7 @@ var BaseLevel = {
             klass = this.tileVariety[this.getRandomInt(0, this.tileVariety.length - 1)];
             this.tilePool.push(new klass());
             this.tilePool.push(new klass());
-            tilenum--;
+            tilenum -= 2;
         }
         return  _.shuffle(this.tilePool);
     },

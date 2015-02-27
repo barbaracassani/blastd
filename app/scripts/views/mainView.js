@@ -33,8 +33,7 @@ MainView.prototype.updateTime = function(time) {
 };
 
 MainView.prototype.drawField = function() {
-    var tile = new Tile(document.querySelector(state.domMap.field));
-    tile.draw();
+
 };
 
 module.exports = MainView;

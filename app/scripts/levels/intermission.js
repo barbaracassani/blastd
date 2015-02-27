@@ -4,7 +4,7 @@ var state = require('../config/state');
 module.exports =  {
 
 playIntro : function(options, callback) {
-    var template = _.template('About to play level ${ level }');
+    var template = _.template('About to play level ${ level } Get ready!');
     var field = document.querySelector('#wrapper');
     var text = document.createTextNode(template( { level : options.nextLevel }));
     var el = document.createElement('div');
