@@ -10,7 +10,7 @@ var pathdrawer = require('../pathdrawer');
 
 var BaseLevel = {
     falling : true,
-    swapping : 2000,
+    swapping : 5000,
     rearranging : false,
     offset : 10,
     distance : 10,
@@ -121,51 +121,64 @@ var BaseLevel = {
             }));
         }
 
+        window.clearTimeout(this.swapTime);
+
         this.selectedTiles.forEach(function(tilz) {
-           var interestedColumn = tilz.column;
+            var interestedColumn = tilz.column;
             this.tiles[interestedColumn] = rearrangeColumn.call(this, this.tiles[interestedColumn]);
             this.tiles[interestedColumn].forEach(function(tt, index) {
                 tt.move.call(tt, 'y', (index+1) * (this.tileSide + this.distance), true);
             }.bind(this))
         }.bind(this));
 
+        this.startSwapper();
+
     },
     startSwapper : function() {
-        this.swapTime = window.setInterval(function() {
+        this.swapTime = window.setTimeout(function() {
             this.swapper();
         }.bind(this), this.swapping);
     },
-    stopSwapper : function() {
-        window.clearInterval(this.swapTime);
-    },
     swapper : function() {
 
-        var tile1, tile2, xy1, xy2;
+        var tile1, tile2, xy1, xy2, s1, s2;
 
-        var fullTiles = _.filter(_.flatten(this.tiles), function(tile) {
-            return tile.shape;
-        });
+        window.clearTimeout(this.swapTime);
 
-        if (fullTiles.length > 2) {
+        if (!this.selectedTiles.length) {
 
-        tile1 = fullTiles[this.getRandomInt(0, fullTiles.length - 1)];
-        tile2 = fullTiles[this.getRandomInt(0, fullTiles.length - 1)];
+            var fullTiles = _.filter(_.flatten(this.tiles), function(tile) {
+                return tile.shape;
+            });
+
+            if (fullTiles.length > 2) {
+
+                tile1 = fullTiles[this.getRandomInt(0, fullTiles.length - 1)];
+                tile2 = fullTiles[this.getRandomInt(0, fullTiles.length - 1)];
+
+                var pos1 = this.findTile(tile1.id);
+                var state1 = _.clone(tile1.state, true);
+                var removedTile1 = this.tiles[pos1.column].splice(pos1.row, 1, {})[0];
 
 
-        while (tile1.shape.id === tile2.shape.id) {
-            tile2 = fullTiles[this.getRandomInt(0, fullTiles.length - 1)];
+                var pos2 = this.findTile(tile2.id);
+                var state2 = _.clone(tile2.state, true);
+                var removedTile2 = this.tiles[pos2.column].splice(pos2.row, 1, {})[0];
+
+                this.tiles[pos1.column].splice(pos1.row, 1, removedTile2);
+                this.tiles[pos2.column].splice(pos2.row, 1, removedTile1);
+
+                removedTile1.remove();
+                removedTile2.remove();
+
+                removedTile1.draw({x : state2.x, y : state2.y});
+                removedTile2.draw({x : state1.x, y : state1.y});
+
+
+            }
         }
 
-        xy1 = _.clone(tile1.state);
-        xy2 = _.clone(tile2.state);
-
-        tile1.move('x', xy2.x);
-        tile1.move('y', xy2.y);
-
-        tile2.move('x', xy1.x);
-        tile2.move('y', xy1.y);
-
-        }
+        this.startSwapper();
 
     },
     clickHandler : function(id) {

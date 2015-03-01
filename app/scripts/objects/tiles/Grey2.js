@@ -3,9 +3,11 @@ var state = require('../../config/state');
 var uuid = require('node-uuid');
 var assign = require('object-assign');
 
-var Grey2 = function(){
+function Grey2(){
     this.state = {};
-};
+    this.name = 'Grey2';
+    this.id = uuid.v4();
+}
 
 Grey2.prototype = new BaseTile(state);
 Grey2.prototype.constructor = Grey2;
@@ -23,9 +25,6 @@ Grey2.prototype.remove = function() {
 };
 
 Grey2.prototype.draw = function(props) {
-
-    this.id = uuid.v4();
-    this.name = 'grey2';
 
     var svgNode = document.querySelector(this.field),
         state = this.state,

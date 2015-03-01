@@ -5,7 +5,7 @@ var assign = require('object-assign');
 
 function Tile(state) {
     this.field = state.domMap.field;
-    this.id = null;
+    this.id = uuid.v4();
     this.state = {};
     this.init();
 }
@@ -28,7 +28,11 @@ Tile.prototype.dehighlight = function() {
 };
 
 Tile.prototype.remove = function() {
-    document.querySelector(this.field).removeChild(this.shape)
+    if (!this.shape) {
+        debugger;
+    }
+    document.querySelector(this.field).removeChild(this.shape);
+    this.shape = null;
 };
 
 Tile.prototype.move = function(prop, value, drop) {
@@ -55,8 +59,6 @@ Tile.prototype.animate = function(value) {
 };
 
 Tile.prototype.draw = function(props) {
-
-    this.id = uuid.v4();
 
     var svgNode = document.querySelector(this.field),
         state = this.state,
