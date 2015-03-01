@@ -10,7 +10,7 @@ var pathdrawer = require('../pathdrawer');
 
 var BaseLevel = {
     falling : true,
-    swapping : 5000,
+    swapping : 3000,
     rearranging : false,
     offset : 10,
     distance : 10,
@@ -85,6 +85,9 @@ var BaseLevel = {
                 return true;
             }
         });
+        if (row === undefined) {
+            debugger;
+        }
         return {
             column : column,
             row : row,
@@ -157,23 +160,29 @@ var BaseLevel = {
                 tile2 = fullTiles[this.getRandomInt(0, fullTiles.length - 1)];
 
                 var pos1 = this.findTile(tile1.id);
-                var state1 = _.clone(tile1.state, true);
-                var removedTile1 = this.tiles[pos1.column].splice(pos1.row, 1, {})[0];
-
-
                 var pos2 = this.findTile(tile2.id);
-                var state2 = _.clone(tile2.state, true);
-                var removedTile2 = this.tiles[pos2.column].splice(pos2.row, 1, {})[0];
 
-                this.tiles[pos1.column].splice(pos1.row, 1, removedTile2);
-                this.tiles[pos2.column].splice(pos2.row, 1, removedTile1);
+                if (pos1.column !== pos2.column) {
 
-                removedTile1.remove();
-                removedTile2.remove();
 
-                removedTile1.draw({x : state2.x, y : state2.y});
-                removedTile2.draw({x : state1.x, y : state1.y});
 
+                    var state1 = _.clone(tile1.state, true);
+                    var removedTile1 = this.tiles[pos1.column].splice(pos1.row, 1, {})[0];
+
+
+
+                    var state2 = _.clone(tile2.state, true);
+                    var removedTile2 = this.tiles[pos2.column].splice(pos2.row, 1, {})[0];
+
+                    this.tiles[pos1.column].splice(pos1.row, 1, removedTile2);
+                    this.tiles[pos2.column].splice(pos2.row, 1, removedTile1);
+
+                    removedTile1.remove();
+                    removedTile2.remove();
+
+                    removedTile1.draw({x : state2.x, y : state2.y});
+                    removedTile2.draw({x : state1.x, y : state1.y});
+                }
 
             }
         }
