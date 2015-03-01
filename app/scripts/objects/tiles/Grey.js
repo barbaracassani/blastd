@@ -27,27 +27,45 @@ Grey.prototype.remove = function() {
 Grey.prototype.draw = function(props) {
 
     var svgNode = document.querySelector(this.field),
+        svgChildnode = document.createElementNS("http://www.w3.org/2000/svg", "g"),
         state = this.state,
+        txt,
         square = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-
-    console.warn('my state was ', this.state.x, this.state.y)
 
     this.state = assign(this.state, props || {});
 
-    console.info('my state is ', this.state.x, this.state.y)
+    this.shape = svgChildnode;
 
-    square.setAttributeNS(null, "x", state.x || 40);
-    square.setAttributeNS(null, "y", state.y || 40);
-    square.setAttributeNS(null, "width",  state.w || 10);
-    square.setAttributeNS(null, "height",  state.w || 10);
-    square.setAttributeNS(null, "opacity", state.opacity || 1);
-    square.setAttributeNS(null, "fill", state.color || 'blue');
-    square.setAttribute('id', this.id);
+    svgChildnode.setAttributeNS(null, "x", state.x || 40);
+    svgChildnode.setAttributeNS(null, "y", state.y || 40);
+    svgChildnode.setAttributeNS(null, "width",  state.w || 10);
+    svgChildnode.setAttributeNS(null, "height",  state.w || 10);
+    svgChildnode.setAttributeNS(null, "opacity", state.opacity || 1);
+    svgChildnode.setAttributeNS(null, "fill", state.color || 'blue');
+
+    svgChildnode.setAttribute('id', this.id);
+    svgChildnode.setAttributeNS(null, "class", "tile");
     square.setAttributeNS(null, "class", "tile");
 
-    this.shape = square;
+    square.setAttributeNS(null, "width",  state.w || 10);
+    square.setAttributeNS(null, "height",  state.w || 10);
+    square.setAttributeNS(null, "x", state.x || 40);
+    square.setAttributeNS(null, "y", state.y || 40);
 
-    svgNode.appendChild(square);
+    txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    txt.textContent = 'A';
+    txt.setAttributeNS(null, "width",  state.w);
+    txt.setAttributeNS(null, "height",  state.w);
+    txt.setAttributeNS(null, "fill",  'white');
+    txt.setAttributeNS(null, "x", state.x+5);
+    txt.setAttributeNS(null, "y", state.y+25);
+    txt.setAttributeNS(null, "class", "tile");
+
+    svgChildnode.appendChild(square);
+    svgChildnode.appendChild(txt);
+
+
+    svgNode.appendChild(svgChildnode);
 };
 
 module.exports = Grey;

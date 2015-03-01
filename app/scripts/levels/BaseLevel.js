@@ -10,7 +10,7 @@ var pathdrawer = require('../pathdrawer');
 
 var BaseLevel = {
     falling : true,
-    swapping : 3000,
+    swapping : false,
     rearranging : false,
     offset : 10,
     distance : 10,
@@ -85,9 +85,6 @@ var BaseLevel = {
                 return true;
             }
         });
-        if (row === undefined) {
-            debugger;
-        }
         return {
             column : column,
             row : row,
@@ -134,7 +131,9 @@ var BaseLevel = {
             }.bind(this))
         }.bind(this));
 
-        this.startSwapper();
+        if (this.swapping) {
+            this.startSwapper();
+        }
 
     },
     startSwapper : function() {

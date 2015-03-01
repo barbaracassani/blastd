@@ -27,26 +27,42 @@ Grey3.prototype.remove = function() {
 Grey3.prototype.draw = function(props) {
 
     var svgNode = document.querySelector(this.field),
+        svgChildnode = document.createElementNS("http://www.w3.org/2000/svg", "g"),
         state = this.state,
+        txt,
         square = document.createElementNS("http://www.w3.org/2000/svg", "rect");
 
     this.state = assign(this.state, props || {});
 
-    console.info('my state is ', this.state.x, this.state.y)
+    this.shape = svgChildnode;
 
-    square.setAttributeNS(null, "x", state.x || 40);
-    square.setAttributeNS(null, "y", state.y ||40);
-    square.setAttributeNS(null, "width",  state.w || 10);
-    square.setAttributeNS(null, "height",  state.w || 10);
-    square.setAttributeNS(null, "opacity", state.opacity || 1);
-    square.setAttributeNS(null, "fill", state.color || 'yellow');
+    svgChildnode.setAttributeNS(null, "x", state.x || 40);
+    svgChildnode.setAttributeNS(null, "y", state.y || 40);
+    svgChildnode.setAttributeNS(null, "width",  state.w || 10);
+    svgChildnode.setAttributeNS(null, "height",  state.w || 10);
+    svgChildnode.setAttributeNS(null, "opacity", state.opacity || 1);
+    svgChildnode.setAttributeNS(null, "fill", state.color || 'black');
+
+    svgChildnode.setAttribute('id', this.id);
+    svgChildnode.setAttributeNS(null, "class", "tile");
     square.setAttributeNS(null, "class", "tile");
 
-    square.setAttribute('id', this.id);
+    square.setAttributeNS(null, "width",  state.w || 10);
+    square.setAttributeNS(null, "height",  state.w || 10);
+    square.setAttributeNS(null, "x", state.x || 40);
+    square.setAttributeNS(null, "y", state.y || 40);
 
-    this.shape = square;
+    txt = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    txt.setAttributeNS(null, "fill",  'white');
+    txt.style.transform = 'translate(' +  (state.x+2) + 'px, ' + (state.y+2) + 'px) scale(0.75)';
+    txt.setAttribute("d", "M16 0l-10 16 10 16 10-16z");
+    txt.setAttribute("class", "diamond tile");
 
-    svgNode.appendChild(square);
+    svgChildnode.appendChild(square);
+    svgChildnode.appendChild(txt);
+
+
+    svgNode.appendChild(svgChildnode);
 };
 
 

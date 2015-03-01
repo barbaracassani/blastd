@@ -28,9 +28,6 @@ Tile.prototype.dehighlight = function() {
 };
 
 Tile.prototype.remove = function() {
-    if (!this.shape) {
-        debugger;
-    }
     document.querySelector(this.field).removeChild(this.shape);
     this.shape = null;
 };
@@ -76,6 +73,8 @@ Tile.prototype.draw = function(props) {
     this.shape = circle;
 
     svgNode.appendChild(circle);
+
+
 };
 
 module.exports = Tile;
