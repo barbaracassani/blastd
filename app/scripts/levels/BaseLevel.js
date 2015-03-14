@@ -163,12 +163,8 @@ var BaseLevel = {
 
                 if (pos1.column !== pos2.column) {
 
-
-
                     var state1 = _.clone(tile1.state, true);
                     var removedTile1 = this.tiles[pos1.column].splice(pos1.row, 1, {})[0];
-
-
 
                     var state2 = _.clone(tile2.state, true);
                     var removedTile2 = this.tiles[pos2.column].splice(pos2.row, 1, {})[0];
@@ -219,11 +215,11 @@ var BaseLevel = {
     },
     timer : function() {
         var time = this.time;
-        var timeout = window.setInterval(function() {
+        this.timeout = window.setInterval(function() {
             time -= 1000;
             this.emit(state.events.ON_TIME, time / 1000);
             if (time <= 0) {
-                window.clearInterval(timeout);
+                window.clearInterval(this.timeout);
             }
         }.bind(this), 1000)
     },
@@ -237,6 +233,15 @@ var BaseLevel = {
     },
     end : function(view) {
         view.removeListener('clicked', this.clickHandler.bind(this));
+        window.clearInterval(this.timeout);
+        window.clearTimeout(this.swapTime);
+        this.tiles.forEach(function(tileRow) {
+            tileRow.forEach(function(tile) {
+                if (tile.instance) {
+                    tile.instance.remove();
+                }
+            })
+        })
     }
 };
 

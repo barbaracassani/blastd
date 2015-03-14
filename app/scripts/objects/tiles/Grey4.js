@@ -60,7 +60,7 @@ Grey4.prototype.draw = function(props) {
 
     svgChildnode.appendChild(square);
     svgChildnode.appendChild(txt);
-    
+
     svgNode.appendChild(svgChildnode);
 };
 
