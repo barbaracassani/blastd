@@ -4,20 +4,26 @@ var state = require('../config/state');
 module.exports =  {
 
     playOutro : function(options, callback) {
-        var template = _.template('Game over chaps. Too bad :)');
+        var template = _.template('Game over chaps. Too bad :)<br>' +
+        '<button id="restart"> Restart game </button><b><%= value %></b>');
         var field = document.querySelector('#wrapper');
-        var text = document.createTextNode(template( { level : options.nextLevel }));
+        var text = template( { value : options.nextLevel });
         var el = document.createElement('div');
         el.id = 'levelIntro';
         el.classList.add('outro', 'gameOutro');
-        el.appendChild(text);
+        el.innerHTML = text;
         field.appendChild(el);
 
-        window.setTimeout(function() {
+        function restartGame() {
+            document.querySelector('#restart').removeEventListener('click', restartGame.bind(this));
             field.removeChild(el);
             el = null;
             callback();
-        }, state.state.outroLength);
+        }
+
+        document.querySelector('#restart').addEventListener('click', restartGame.bind(this));
+
+
     }
 
 };

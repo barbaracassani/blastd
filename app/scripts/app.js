@@ -75,7 +75,9 @@ Game.prototype.endGame = function() {
     gameOutro.playOutro({
         container : state.domMap.field
     }, function() {
-        console.info('huh');
+        index = 0;
+        this.currentLevel = null;
+        this.init();
     }.bind(this));
 };
 

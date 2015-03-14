@@ -35,6 +35,11 @@ path {
   font-size: 28px;
 }
 
-.outro {
+.outro, .intro {
   background-color: #0000FF;
+  position:absolute;
+  top : 0;
+  bottom : 0;
+  left : 0;
+  right : 0;
 }

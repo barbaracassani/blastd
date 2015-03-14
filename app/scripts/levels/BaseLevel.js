@@ -217,10 +217,10 @@ var BaseLevel = {
         var time = this.time;
         this.timeout = window.setInterval(function() {
             time -= 1000;
-            this.emit(state.events.ON_TIME, time / 1000);
             if (time <= 0) {
                 window.clearInterval(this.timeout);
             }
+            this.emit(state.events.ON_TIME, time / 1000);
         }.bind(this), 1000)
     },
     start : function(view) {
